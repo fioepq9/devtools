@@ -22,9 +22,7 @@ var _ = Describe("Ctx", func() {
 	)
 	BeforeEach(func() {
 		buf = &bytes.Buffer{}
-		l = log.
-			DefaultConsoleLogger(buf, slog.LevelDebug).
-			With(slog.Int64("unix", nowUnix))
+		l = log.DefaultConsoleLogger(buf, slog.LevelDebug).With(slog.Int64("unix", nowUnix))
 		slog.SetDefault(l)
 	})
 
