@@ -66,7 +66,7 @@ func WithDefines(defines map[string]StructBuilderDefine) GenBuilderOption {
 	}
 }
 
-func GenBuilder(ctx context.Context, option ...GenBuilderOption) error {
+func Generate(ctx context.Context, option ...GenBuilderOption) error {
 	var opt GenBuilderOptions
 	for _, o := range option {
 		o(&opt)
@@ -77,9 +77,9 @@ func GenBuilder(ctx context.Context, option ...GenBuilderOption) error {
 	for structName, define := range opt.Defines {
 		builderName := structName + "Builder"
 
-		addFieldFns := make([]jen.Code, 0)
+		fieldAssignmentFns := make([]jen.Code, 0)
 		for _, field := range define.Fields {
-			addFieldFns = append(addFieldFns, FieldAssignmentFunc(builderName, field.Name, field.Type))
+			fieldAssignmentFns = append(fieldAssignmentFns, FieldAssignmentFunc(builderName, field.Name, field.Type))
 		}
 
 		builderStruct := jen.Type().Id(builderName).Struct(jen.Id("data").Id("*" + structName))
@@ -87,7 +87,7 @@ func GenBuilder(ctx context.Context, option ...GenBuilderOption) error {
 		f.Add(builderStruct, jen.Line())
 
 		f.Add(NewBuilderFunc(builderName, structName), jen.Line())
-		for _, fn := range addFieldFns {
+		for _, fn := range fieldAssignmentFns {
 			f.Add(fn, jen.Line())
 		}
 		f.Add(BuildFunc(builderName, structName), jen.Line())

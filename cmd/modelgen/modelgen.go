@@ -54,8 +54,9 @@ func Command() *cli.Command {
 						needBuilder = append(needBuilder, vv)
 					}
 				}
+
 				if len(needBuilder) != 0 {
-					err = builder.GenBuilder(
+					err = builder.Generate(
 						c.Context,
 						builder.WithPackage(pkg),
 						builder.WithPath(strings.TrimRight(f, ".go")+"_builder.gen.go"),
